@@ -4,13 +4,12 @@ const route = require("./routes/route");
 const { default: mongoose } = require("mongoose");
 const app = express();
 
-
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 mongoose
   .connect(
-    "mongodb+srv://Sai0047:rXxgqYKPqwnhcXX7@cluster0.qptsw.mongodb.net/Create",
+    "mongodb+srv://Sai0047:rXxgqYKPqwnhcXX7@cluster0.qptsw.mongodb.net/Blogging_Site_Project_1",
     {
       useNewUrlParser: true,
     }
