@@ -60,7 +60,7 @@ const createAuthor = async function (req, res) {
   if (!["Mr", "Mrs", "Miss"].includes(data.title)) {
     return res.status(400).send({
       status: false,
-      msg: "Title Must be these values [Mr, Mrs, Miss] ",
+      msg: "Title Must be of these values [Mr, Mrs, Miss] ",
     });
   }
 

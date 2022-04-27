@@ -1,10 +1,15 @@
+const authorModel = require("../models/authorModel.js");
 const blogModels = require("../models/blogModel.js");
+const isValidObjectId = function (objectId) {
+  return mongoose.Types.ObjectId.isValid(objectId);
+};
 
+// Creating Blog Model
 const createBlogs = async function (req, res) {
   let data = req.body;
 
   // Validate the blog data is present or not
-  if (!data.title) {
+  if (Object.keys(data).length == 0) {
     return res.status(400).send({
       status: false,
       msg: "Invalid request !! Please Provide Blog Details",
@@ -27,7 +32,7 @@ const createBlogs = async function (req, res) {
     });
   }
 
-  // Validate the title in blog
+  // Validate that authorid is coming or not in blog
   if (!data.authorId) {
     return res.status(400).send({
       status: false,
@@ -35,46 +40,152 @@ const createBlogs = async function (req, res) {
     });
   }
 
-  // Validate the title in blog
-  if (!data.tags) {
+  // Validate the authorId
+  if (!isValidObjectId(data.authorId)) {
     return res.status(400).send({
       status: false,
-      msg: "Please Provide Blog Title",
+      msg: " AuthorId is invalid",
     });
   }
 
-
-// Validate the blog title
-  if (!data.tags) {
-    return res.status(400).send({
-      status: false,
-      msg: "Please Provide Blog Tags",
-    });
+  //Validate the existing authorId
+  let existingAuthor = await authorModel.find({ _id: data.authorId });
+  if (existingAuthor) {
+    return res
+      .status(400)
+      .send({ status: false, msg: "authorId already exists" });
   }
-  
 
-
-// Validate the blog title
+  // Validate the category in blog
   if (!data.category) {
     return res.status(400).send({
       status: false,
-      msg: "Please Provide Blog Tags",
+      msg: "Please Provide Blog category",
     });
   }
 
-
-
-// Validate the blog title
-  if (!data.subcategory) {
-    return res.status(400).send({
-      status: false,
-      msg: "Please Provide Blog Tags",
-    });
-  }
-
-
-// authorId category, subcategory, isPublished
   let blogDetails = await blogModels.create(data);
-  res.send({ status: true, data: blogDetails });
+  res.status(201).send({
+    status: true,
+    msg: "Blog is Successfully Created",
+    data: blogDetails,
+  });
 };
+
+// Getting Blogs by filter queries
+const getBlogs = async function (req, res) {
+  let authorId1 = req.query.authorId;
+  let category1 = req.query.category;
+  let tags1 = req.query.tag;
+  let subcategory1 = req.query.subcategory;
+
+  let filtered = await blogModels.find(
+    { isDeleted: false },
+    { isPublished: true },
+    {
+      $or: [
+        { authorId: authorId1 },
+        { category: category1 },
+        { tags: { $all: [tags1] } },
+        { subcategory: { $all: [subcategory1] } },
+      ],
+    }
+  );
+
+  if (!filtered) {
+    return res.status(404).send({ status: false, data: "Data Not Found" });
+  }
+
+  res.status(200).send({
+    status: true,
+    msg: "blogs are successfully fetched",
+    data: filtered,
+  });
+};
+
+// Updating blogs by given requirement
+const update = async function (req, res) {
+  //title, body, adding tags, adding a subcategory.
+
+  let id = req.params.blogId;
+  // check id exists or not
+  if (!id) {
+    return res
+      .status(404)
+      .send({ status: false, msg: "BlogId Must be present" });
+  }
+  let title1 = req.query.title;
+  let body1 = req.query.body;
+  let tags1 = req.query.tags;
+  let subcategory1 = req.query.subcategory;
+
+  // let updatedtag = Blog.tags;
+  // updatedtag.push(tags);
+
+  // let updatedSubcategory = Blog.subcategory;
+  // updatedSubcategory.push(subcategory);
+
+  let updatedDoc = await blogModels.findOneAndUpdate(
+    { _id: id },
+    {
+      title: title1,
+      body: body1,
+      $addToSet: { tags: tags1, subcategory: subcategory1 }, // new method for updating/adding data in Array
+      isPublished: true,
+    },
+    { new: true }
+  );
+
+  // Update the isPublished to true
+  if (updatedDoc.isPublished == true) {
+    return (updatedDoc.publishedAt = new Date());
+  }
+
+  // Update the isPublished to false
+  if (updatedDoc.isPublished == false) {
+    return (updatedDoc.publishedAt = null);
+  }
+
+  // check if updated document found or not
+  if (!updatedDoc) {
+    return res
+      .status(404)
+      .send({ status: false, msg: "Document Not Found in Blogs " });
+  }
+
+  res.status(200).send({
+    status: true,
+    msg: "blogs are successfully Updated",
+    data: updatedDoc,
+  });
+};
+
+
+
+
+
+const deleteBlog = async function(req,res){
+ let id = req.params.blogId
+ // check id exists or not
+ if(!id){
+    return res.status(404)
+    .send({ status: false, msg: "Blog Id Must be present"})
+}
+let deleteBlog = await blogModels.findOneAndDelete({_id:id},{isDeleted:true},{new :true})
+// // check deleted document exists or not
+if(!deleteBlog){
+    return res.status(404)
+      .send({ status: false, msg: "Document Not Found in Blogs " });
+}
+
+res.send(200).send({status:true,msg:"Deleted Blog Successfully",data:deleteBlog})
+}
+
+
+
+
+const deleteByQuery= 
 module.exports.createBlogs = createBlogs;
+module.exports.getBlogs = getBlogs;
+module.exports.update = update;
+module.exports.deleteByQuery = deleteByQuery;

@@ -14,6 +14,7 @@ const newSchema = new mongoose.Schema(
     authorId: {
       type: ObjectId,
       ref: "Author",
+      required:true
     },
     tags: [String],
     category: {
@@ -40,5 +41,6 @@ const newSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
+
 
 module.exports = mongoose.model("Blog", newSchema);
