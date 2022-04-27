@@ -1,5 +1,6 @@
 const authorModel = require("../models/authorModel.js");
 const blogModels = require("../models/blogModel.js");
+
 const isValidObjectId = function (objectId) {
   return mongoose.Types.ObjectId.isValid(objectId);
 };
@@ -49,12 +50,12 @@ const createBlogs = async function (req, res) {
   }
 
   //Validate the existing authorId
-  let existingAuthor = await authorModel.find({ _id: data.authorId });
-  if (existingAuthor) {
-    return res
-      .status(400)
-      .send({ status: false, msg: "authorId already exists" });
-  }
+  //   let existingAuthor = await authorModel.find({ _id: data.authorId });
+  //   if (existingAuthor) {
+  //     return res
+  //       .status(400)
+  //       .send({ status: false, msg: "authorId already exists" });
+  //   }
 
   // Validate the category in blog
   if (!data.category) {
@@ -79,6 +80,11 @@ const getBlogs = async function (req, res) {
   let tags1 = req.query.tag;
   let subcategory1 = req.query.subcategory;
 
+  if (!authorId1 && !category1 && !tags1 && !subcategory1) {
+    return res
+      .status(400)
+      .send({ status: false, msg: "Filter Queries Are Not Valid" });
+  }
   let filtered = await blogModels.find(
     { isDeleted: false },
     { isPublished: true },
@@ -102,7 +108,6 @@ const getBlogs = async function (req, res) {
     data: filtered,
   });
 };
-
 // Updating blogs by given requirement
 const update = async function (req, res) {
   //title, body, adding tags, adding a subcategory.
@@ -191,7 +196,7 @@ const deleteByQuery = async function (req, res) {
   let data = req.query;
 
   //   category, authorid, tag name, subcategory name, unpublished
-  if (data.category && data.authorId && data.tags && data.subcategory) {
+  if (!data.category && !data.authorId && !data.tags && !data.subcategory) {
     return res
       .status(400)
       .send({ status: false, msg: "Filter Queries Are Not Valid" });
