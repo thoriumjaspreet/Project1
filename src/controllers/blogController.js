@@ -1,5 +1,6 @@
 const authorModel = require("../models/authorModel.js");
 const blogModels = require("../models/blogModel.js");
+const mongoose = require("mongoose");
 
 const isValidObjectId = function (objectId) {
   return mongoose.Types.ObjectId.isValid(objectId);
@@ -56,6 +57,10 @@ const createBlogs = async function (req, res) {
         status: false,
         msg: "Please Provide Blog category",
       });
+    }
+
+    if (data.isPublished == true) {
+      data.publishedAt = new Date();
     }
 
     let blogDetails = await blogModels.create(data);
