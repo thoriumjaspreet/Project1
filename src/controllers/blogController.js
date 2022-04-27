@@ -77,49 +77,22 @@ const getBlogs = async function (req, res) {
     let tags1 = req.query.tag;
     let subcategory1 = req.query.subcategory;
 
-    if (!authorId1 && !category1 && !tags1 && !subcategory1) {
-      return res
-        .status(400)
-        .send({ status: false, msg: "Filter Queries Are Not Valid" });
-    }
     //------------------------------------------------------------------------------------------------------------
-    if (category1 == "" || typeof(category1) != String) {
+    // Validate the Category Attribute
+    if (category1 == "" || typeof category1 != String) {
       return res
         .status(400)
         .send({ status: false, msg: "category is Invalid" });
     }
-    if (authorId1== "" || !isValidObjectId(authorId1)) {
+
+    // Validate the authorId
+    if (!isValidObjectId(authorId1)) {
       return res
         .status(400)
         .send({ status: false, msg: "authorId is Invalid" });
     }
 
-    let tagsArr = tags1;
-    if (
-      tagsArr.length == 0 ||
-      Array.isArray(tagsArr) ||
-      function check(tagsArr) {
-        return tagsArr.every((i) => typeof i === "string");
-      } == false
-    ) {
-      res.status(400).send({ status: false, msg: "tags are Invalid" });
-    }
-
-    let subCatArr = subcategory1;
-    if (
-      subCatArr.length == 0 ||
-      Array.isArray(subCatArr) ||
-      !function check(subCatArr) {
-        return subCatArr.every((i) => typeof i === "string");
-      } == false
-    ) {
-      res
-        .status(400)
-        .send({ status: false, msg: "subcategory must be present" });
-    }
-
-  
-    //------------------------------------------------------------------------------------------------------------
+    // Validate the authorId
 
     let filtered = await blogModels.find(
       { isDeleted: false },
@@ -134,6 +107,7 @@ const getBlogs = async function (req, res) {
       }
     );
 
+    // Check whether the document is found or not
     if (!filtered) {
       return res.status(404).send({ status: false, data: "Data Not Found" });
     }
