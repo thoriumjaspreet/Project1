@@ -24,7 +24,7 @@ const createBlogs = async function (req, res) {
     });
   }
 
-  // Validate the title in blog
+  // Validate the body in blog
   if (!data.body) {
     return res.status(400).send({
       status: false,
@@ -160,32 +160,64 @@ const update = async function (req, res) {
   });
 };
 
-
-
-
-
-const deleteBlog = async function(req,res){
- let id = req.params.blogId
- // check id exists or not
- if(!id){
-    return res.status(404)
-    .send({ status: false, msg: "Blog Id Must be present"})
-}
-let deleteBlog = await blogModels.findOneAndDelete({_id:id},{isDeleted:true},{new :true})
-// // check deleted document exists or not
-if(!deleteBlog){
-    return res.status(404)
+// Updating blogs by given requirement i.e Deleting
+const deleteBlog = async function (req, res) {
+  let id = req.params.blogId;
+  // check id exists or not
+  if (!id) {
+    return res
+      .status(404)
+      .send({ status: false, msg: "Blog Id Must be present" });
+  }
+  let deleteBlog = await blogModels.findOneAndDelete(
+    { _id: id },
+    { isDeleted: true },
+    { new: true }
+  );
+  // check deleted document exists or not
+  if (!deleteBlog) {
+    return res
+      .status(404)
       .send({ status: false, msg: "Document Not Found in Blogs " });
-}
+  }
 
-res.send(200).send({status:true,msg:"Deleted Blog Successfully",data:deleteBlog})
-}
+  res
+    .send(200)
+    .send({ status: true, msg: "Deleted Blog Successfully", data: deleteBlog });
+};
 
+// Updating blogs by given requirement i.e Deletion
+const deleteByQuery = async function (req, res) {
+  let data = req.query;
 
+  //   category, authorid, tag name, subcategory name, unpublished
+  if (data.category && data.authorId && data.tags && data.subcategory) {
+    return res
+      .status(400)
+      .send({ status: false, msg: "Filter Queries Are Not Valid" });
+  }
 
+  let updatedDoc = await blogModels.findOneAndUpdate(
+    data,
+    { isDeleted: true },
+    { new: true }
+  );
 
-const deleteByQuery= 
+  // check deleted document exists or not
+  if (!deleteBlog) {
+    return res
+      .status(404)
+      .send({ status: false, msg: "Document Not Found in Blogs " });
+  }
+  res.status(200).send({
+    status: true,
+    msg: "Data Deleted Successfully",
+    data: updatedDoc,
+  });
+};
+
 module.exports.createBlogs = createBlogs;
 module.exports.getBlogs = getBlogs;
 module.exports.update = update;
+module.exports.deleteBlog = deleteBlog;
 module.exports.deleteByQuery = deleteByQuery;
