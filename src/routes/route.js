@@ -16,7 +16,7 @@ router.get("/getBlogs", blogController.getBlogs);
 router.put("/getBlogs/:blogId", blogController.getBlogs);
 
 // Delete Blog by id
-router.put("/getBlogs/:blogId", blogController.deleteBlog);
+router.delete("/getBlogs/:blogId", blogController.deleteBlog);
 
 // Delete By Query Params
 router.put("/getBlogs/:blogId", blogController.deleteByQuery);

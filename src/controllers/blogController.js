@@ -89,7 +89,7 @@ const getBlogs = async function (req, res) {
     let data = req.query;
     /// check the respective data is there or not
     if (
-      !(data.authorId1 || data.category1 || data.tags1 || data.subcategory1)
+      !(data.authorId || data.category || data.tags || data.subcategory)
     ) {
       res.status(400).send({ status: false, msg: "Invalid parameters" });
     }
@@ -108,7 +108,7 @@ const getBlogs = async function (req, res) {
     let dataUpdated = req.query;
 
     // Validate the authorId
-    if (!isValidObjectId(authorId1)) {
+    if (!isValidObjectId(dataUpdated.authorId)) {
       return res
         .status(400)
         .send({ status: false, msg: "authorId is Invalid" });
@@ -274,7 +274,7 @@ const deleteBlog = async function (req, res) {
     let data = await blogModels.findOne({ _id: id });
 
     if (data.isDeleted == false) {
-      let deleteBlog = await blogModels.findOneAndDelete(
+      let deleteBlog = await blogModels.findOneAndUpdate(
         { _id: id },
         { isDeleted: true, deletedAt: new Date() },
         { new: true }
@@ -343,8 +343,17 @@ const deleteByQuery = async function (req, res) {
   }
 };
 
+
+
+
+
+
+
 module.exports.createBlogs = createBlogs;
 module.exports.getBlogs = getBlogs;
 module.exports.update = update;
 module.exports.deleteBlog = deleteBlog;
 module.exports.deleteByQuery = deleteByQuery;
+
+
+
