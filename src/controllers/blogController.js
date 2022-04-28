@@ -276,7 +276,7 @@ const deleteBlog = async function (req, res) {
     if (data.isDeleted == false) {
       let deleteBlog = await blogModels.findOneAndDelete(
         { _id: id },
-        { isDeleted: true },
+        { isDeleted: true, deletedAt: new Date() },
         { new: true }
       );
       // check deleted document exists or not
@@ -311,6 +311,7 @@ const deleteByQuery = async function (req, res) {
         .status(404)
         .send({ status: false, msg: "Blog Id Must be present" });
     }
+    
     let data = req.query;
 
     //   category, authorid, tag name, subcategory name, unpublished
