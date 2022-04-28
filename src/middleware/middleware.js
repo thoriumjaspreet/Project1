@@ -32,7 +32,7 @@ const login = async function(req,res,next){
 }
 
 
-const Authorization = async function (req, res, next) {
+const AuthorizationById = async function (req, res, next) {
   try {
     
     let blogData = await blogModels.findById(blogId);
@@ -47,6 +47,7 @@ const Authorization = async function (req, res, next) {
     if (BlogToBeModified != AuthorLoggedIn){
     return res.send({ status: false, msg: "Author Logged in is not Allowed to Modify the Requested Blog Data"});
     }
+    
     next();
   } catch (err) {
     res.status(500).send({ status: false, Error: error.message });
@@ -54,5 +55,5 @@ const Authorization = async function (req, res, next) {
 };
 
 
-module.exports.Authorization = Authorization ;
+module.exports.AuthorizationById = AuthorizationById ;
 module.exports.login = login;

@@ -78,17 +78,13 @@ const createBlogs = async function (req, res) {
 const getBlogs = async function (req, res) {
   try {
     let queryData = req.query;
+
     // check whether this of data
-    if (
-      !(
-        queryData.authorId ||
-        queryData.category ||
-        queryData.tags ||
-        queryData.subcategory
-      )
-    ) {
+    if (!(queryData.authorId ||queryData.category ||queryData.tags ||queryData.subcategory)) {
       return res.status(400).send({ status: false, msg: "Invalid Filters" });
     }
+
+
     // exclude title and body
     if (req.query.title && !req.query.body) delete req.query.title;
     else if (req.query.body && !req.query.title) delete req.query.body;
@@ -119,7 +115,7 @@ const getBlogs = async function (req, res) {
     if (blogData.length == 0) {
       return res.status(404).send({ status: false, msg: "Document Not Found" });
     }
-    return res.status(200).send({ status: true, Data: blogData });
+    return res.status(200).send({ status: true, data: blogData });
   } catch (err) {
     return res.status(500).send({ status: false, err: err.message });
   }
@@ -147,6 +143,7 @@ const update = async function (req, res) {
     }
 
     let blogData = await blogModels.findById(blogId);
+
     if (!blogData || blogData.isDeleted == true) {
       return res.status(404).send({ status: false, msg: "Document Not Found" });
     }
@@ -192,23 +189,23 @@ const deleteBlog = async function (req, res) {
     let blogData = await blogModels.findById(blogId);
 
     // console.log(blogData);
-    //-----------------------------------------------------------------------------------------------------------------------
-    // AUTHORIZATION
-    // Extract BlogId for which the request is made. In this case message to be posted Or Want to update And Delete Something.
+    // //-----------------------------------------------------------------------------------------------------------------------
+    // // AUTHORIZATION
+    // // Extract BlogId for which the request is made. In this case message to be posted Or Want to update And Delete Something.
 
-     let BlogToBeModified = blogData.authorId;
+    //  let BlogToBeModified = blogData.authorId;
 
-    // Extract AuthorId for the logged-in user
-     let  decodedToken= req.decodedToken
-     let AuthorLoggedIn = decodedToken.authorId;
+    // // Extract AuthorId for the logged-in user
+    //  let  decodedToken= req.decodedToken
+    //  let AuthorLoggedIn = decodedToken.authorId;
  
-    // AuthorId comparision to check if the logged-in Author is requesting for their own data
-     if (BlogToBeModified != AuthorLoggedIn){
-     return res.send({ status: false, msg: "Author Logged in is not Allowed to Modify the Requested Blog Data"});
+    // // AuthorId comparision to check if the logged-in Author is requesting for their own data
+    //  if (BlogToBeModified != AuthorLoggedIn){
+    //  return res.send({ status: false, msg: "Author Logged in is not Allowed to Modify the Requested Blog Data"});
 
-     }
+    //  }
 
-    //-----------------------------------------------------------------------------------------------------------------------
+    // //-----------------------------------------------------------------------------------------------------------------------
 
     if (!blogData || blogData.isDeleted == true) {
       res.status(404).send({ status: false, msg: "Data Not Found" });
@@ -228,17 +225,8 @@ const deleteByQuery = async function (req, res) {
   try {
     let queryData = req.query;
 
-    if (
-      !(
-        queryData.category ||
-        queryData.authorId ||
-        queryData.tags ||
-        queryData.subcategory
-      )
-    ) {
-      return res
-        .status(404)
-        .send({ status: false, msg: "Invalid Request...." });
+    if (!(queryData.category || queryData.authorId || queryData.tags || queryData.subcategory)) {
+      return res.status(404).send({ status: false, msg: "Invalid Request...." });
     }
 
     
@@ -249,9 +237,8 @@ const deleteByQuery = async function (req, res) {
       { new: true }
     );
 
-    return res
-      .status(200)
-      .send({ status: true, status: "Blog Deleted Successfully", msg: data1 });
+    return res.status(200).send({ status: true, status: "Blog Deleted Successfully", msg: data1 });
+    
   } catch (err) {
     return res.status(500).send({ status: false, err: err.message });
   }
