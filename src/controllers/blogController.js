@@ -192,19 +192,20 @@ const deleteBlog = async function (req, res) {
     let blogData = await blogModels.findById(blogId);
 
     // console.log(blogData);
-     //-----------------------------------------------------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------------------------------------------------
     // AUTHORIZATION
-     // Extract BlogId for which the request is made. In this case message to be posted Or Want to update And Delete Something.
+    // Extract BlogId for which the request is made. In this case message to be posted Or Want to update And Delete Something.
 
      let BlogToBeModified = blogData.authorId;
 
-     // Extract AuthorId for the logged-in user
+    // Extract AuthorId for the logged-in user
      let  decodedToken= req.decodedToken
      let AuthorLoggedIn = decodedToken.authorId;
  
-     // AuthorId comparision to check if the logged-in Author is requesting for their own data
+    // AuthorId comparision to check if the logged-in Author is requesting for their own data
      if (BlogToBeModified != AuthorLoggedIn){
      return res.send({ status: false, msg: "Author Logged in is not Allowed to Modify the Requested Blog Data"});
+
      }
 
     //-----------------------------------------------------------------------------------------------------------------------

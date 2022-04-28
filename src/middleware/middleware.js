@@ -35,8 +35,9 @@ const login = async function(req,res,next){
 const Authorization = async function (req, res, next) {
   try {
     
-    // Extract BlogId for which the request is made. In this case message to be posted Or Want to update And Delete Something.
-    let BlogToBeModified = req.params.blogId;
+    let blogData = await blogModels.findById(blogId);
+    // Extract AuthorId for which the request is made. In this case message to be posted Or Want to update And Delete Something.
+    let BlogToBeModified = blogData.authorId;
 
     // Extract AuthorId for the logged-in user
     let  decodedToken = req.decodedToken
