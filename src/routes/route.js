@@ -13,7 +13,7 @@ router.post("/createBlogs", blogController.createBlogs);
 router.get("/getBlogs", blogController.getBlogs);
 
 // Update Blog by id
-router.put("/getBlogs/:blogId", blogController.getBlogs);
+router.put("/getBlogs/:blogId", blogController.update);
 
 // Delete Blog by id
 router.put("/getBlogs/:blogId", blogController.deleteBlog);
