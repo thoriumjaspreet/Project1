@@ -1,4 +1,4 @@
-const authorModel = require("../models/authorModel.js");
+const authorModels = require("../models/authorModel.js");
 const blogModels = require("../models/blogModel.js");
 const mongoose = require("mongoose");
 
@@ -78,7 +78,7 @@ const createBlogs = async function (req, res) {
 const getBlogs = async function (req, res) {
   try {
     let queryData = req.query;
-    // check whwter this of data
+    // check whether this of data
     if (
       !(
         queryData.authorId ||
@@ -97,7 +97,7 @@ const getBlogs = async function (req, res) {
       delete req.query.body;
     }
 
-    queryData = req.query;
+   queryData = req.query;
 
     if (queryData.authorId && !isValidObjectId(queryData.authorId)) {
       return res
@@ -106,7 +106,7 @@ const getBlogs = async function (req, res) {
     }
 
     if (queryData.authorId) {
-      let authorId = await authorModel.findById(queryData.authorId);
+      let authorId = await authorModels.findById(queryData.authorId);
       if (!authorId) {
         return res.status(404).send({ status: false, msg: "Author not Found" });
       }
@@ -190,6 +190,24 @@ const deleteBlog = async function (req, res) {
     // find blog data
 
     let blogData = await blogModels.findById(blogId);
+
+    // console.log(blogData);
+     //-----------------------------------------------------------------------------------------------------------------------
+    // AUTHORIZATION
+     // Extract BlogId for which the request is made. In this case message to be posted Or Want to update And Delete Something.
+
+     let BlogToBeModified = blogData.authorId;
+
+     // Extract AuthorId for the logged-in user
+     let  decodedToken= req.decodedToken
+     let AuthorLoggedIn = decodedToken.authorId;
+ 
+     // AuthorId comparision to check if the logged-in Author is requesting for their own data
+     if (BlogToBeModified != AuthorLoggedIn){
+     return res.send({ status: false, msg: "Author Logged in is not Allowed to Modify the Requested Blog Data"});
+     }
+
+    //-----------------------------------------------------------------------------------------------------------------------
 
     if (!blogData || blogData.isDeleted == true) {
       res.status(404).send({ status: false, msg: "Data Not Found" });
