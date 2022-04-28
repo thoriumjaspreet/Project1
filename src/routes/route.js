@@ -13,12 +13,12 @@ router.post("/createBlogs", blogController.createBlogs);
 router.get("/getBlogs", blogController.getBlogs);
 
 // Update Blog by id
-router.put("/getBlogs/:blogId", blogController.update);
+router.put("/UpdateBlogs/:blogId", blogController.update);
 
 // Delete Blog by id
-router.put("/getBlogs/:blogId", blogController.deleteBlog);
+router.delete("/deleteBlogsById/:blogId", blogController.deleteBlog);
 
 // Delete By Query Params
-router.put("/getBlogs/:blogId", blogController.deleteByQuery);
+router.delete("/deleteBlogsByQuery", blogController.deleteByQuery);
 
 module.exports = router;

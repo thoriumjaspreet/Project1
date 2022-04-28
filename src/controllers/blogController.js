@@ -6,10 +6,6 @@ const isValidObjectId = function (objectId) {
   return mongoose.Types.ObjectId.isValid(objectId);
 };
 
-const isValidString = function (value) {
-  return value != null && typeof value === "string" && value.length > 0;
-};
-
 // Creating Blog Model
 const createBlogs = async function (req, res) {
   try {
@@ -137,7 +133,7 @@ const update = async function (req, res) {
     if (Object.keys(blog).length == 0) {
       return res.status(400).send({status: false,msg: "Invalid request !! Please Provide Blog Details" });
     }
-    
+
     // check query data
         if (! (blog.title || blog.body || blog.tags || blog.subcategory || blog.isPublished)) {
       return res.status(400).send({ status: false, msg: "Invalid Filters" });
@@ -185,13 +181,16 @@ const deleteBlog = async function (req, res) {
   try {
 
     //check valid blog id
-    let blogId = data.params.blogId;
+    let blogId = req.params.blogId;
+
     if (!isValidObjectId(blogId)){
       return res.status(400).send({ status: false, msg: "Invalid Blog-Id" });
     }
 
     // find blog data
+
     let blogData = await blogModels.findById(blogId);
+
     if (!blogData || blogData.isDeleted == true) {
       res.status(404).send({ status: false, msg: "Data Not Found" });
     }
@@ -199,7 +198,7 @@ const deleteBlog = async function (req, res) {
     blogData.isDeleted = true;
     blogData.deletedAt = new Date();
     await blogData.save();
-    res.status(200).send();
+    return res.status(200).send();
   } catch (err) {
     return res.status(500).send({ status: false, err: err.message });
   }
@@ -223,11 +222,11 @@ const deleteByQuery = async function (req, res) {
         .send({ status: false, msg: "Invalid Request...." });
     }
 
-    let deletedDate = new Date();
+    
     queryData.isDeleted = false;
     let data1 = await blogModels.updateMany(
       queryData,
-      { isDeleted: true, deletedAt: deletedDate },
+      { isDeleted: true, deletedAt: new Date() },
       { new: true }
     );
 
