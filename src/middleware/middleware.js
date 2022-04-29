@@ -1,4 +1,10 @@
 const jwt =require("jsonwebtoken")
+const mongoose = require("mongoose");
+const isValidObjectId = function (objectId) {
+  return mongoose.Types.ObjectId.isValid(objectId);
+};
+
+
 
 
 const login = async function(req,res,next){
