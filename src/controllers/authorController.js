@@ -55,7 +55,7 @@ const createAuthor = async function (req, res) {
     }
 
     // validate the password of author
-    if (!data.password) {
+    if (data.password < 8 ) {
       return res
         .status(400)
         .send({ status: false, msg: "Please Provide Password Of Author " });
@@ -82,6 +82,7 @@ const createAuthor = async function (req, res) {
 // LOGIN AUTHOR INTO IT
 const loginAuthor = async function(req,res){
   try{
+    
   // first checck that body is coming or not
 
   let data = req.body;
@@ -93,20 +94,21 @@ const loginAuthor = async function(req,res){
   }
 
   // validate the email of author is Coming in data or not
-  if (!Authoremail) {
-    return res
-      .status(400)
-      .send({ status: false, msg: "Please Provide Email Of Author " });
+  if (!Authoremail) 
+  {
+    return res.status(400).send({ status: false, msg: "Please Provide Email Of Author " });
   }
 
   // Validate the email correctly
-  if (!/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(Authoremail)) {
+  if (!/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(Authoremail)) 
+  {
     res.status(400).send({status: false,message: "Email should be a valid email address"});
   }
 
   // validate the password of author
-  if (!Authorpassword) {
-    return res.status(400).send({ status: false, msg: "Please Provide Password Of Author " });
+  if (!Authorpassword) 
+  { 
+   return res.status(400).send({ status: false, msg: "Please Provide Password Of Author " });
   }
  
   // Find Author in Author Collection
@@ -121,7 +123,8 @@ const loginAuthor = async function(req,res){
   // send response to  user that Author is successfully logined
   res.status(200).send({status: true, message: "Author login successfully", data: { token }});
 
-  }catch (err) {
+  }catch (err) 
+  {
     res.status(500).send({ status: false, msg: err.message });
   }
 

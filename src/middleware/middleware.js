@@ -23,7 +23,7 @@ const login = async function(req,res,next){
 
     req.decodedToken = decodedToken 
     // if Everything is ok then we head towards Api's
-    next()
+    next();
 
 }catch(err)
 {
@@ -34,22 +34,29 @@ const login = async function(req,res,next){
 
 const AuthorizationById = async function (req, res, next) {
   try {
-    
-    let blogData = await blogModels.findById(blogId);
+    let BlogId =req.params.blogId
+    if (!isValidObjectId(BlogId))
+    {
+      return res.status(400).send({ status: false, msg: "Invalid Blog-Id" });
+    }
+
+    let blogData = await blogModels.findById(BlogId);
     // Extract AuthorId for which the request is made. In this case message to be posted Or Want to update And Delete Something.
     let BlogToBeModified = blogData.authorId;
 
     // Extract AuthorId for the logged-in user
-    let  decodedToken = req.decodedToken
+    let decodedToken =  req.decodedToken
     let AuthorLoggedIn = decodedToken.authorId;
 
     // AuthorId comparision to check if the logged-in Author is requesting for their own data
-    if (BlogToBeModified != AuthorLoggedIn){
-    return res.send({ status: false, msg: "Author Logged in is not Allowed to Modify the Requested Blog Data"});
+    if (BlogToBeModified != AuthorLoggedIn)
+    {
+    return res.status(401).send({ status: false, msg: "Author Logged in is not Allowed to Modify the Requested Blog Data"});
     }
-    
+
     next();
-  } catch (err) {
+  }
+  catch (err) {
     res.status(500).send({ status: false, Error: error.message });
   }
 };

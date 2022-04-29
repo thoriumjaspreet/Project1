@@ -9,67 +9,55 @@ const isValidObjectId = function (objectId) {
 // Creating Blog Model
 const createBlogs = async function (req, res) {
   try {
+
+    //Extract Data From Request Body
     let data = req.body;
 
     // Validate the blog data is present or not
-    if (Object.keys(data).length == 0) {
-      return res.status(400).send({
-        status: false,
-        msg: "Invalid request !! Please Provide Blog Details",
-      });
+    if (Object.keys(data).length == 0) 
+    { 
+      return res.status(400).send({status: false,msg: "Invalid request !! Please Provide Blog Details" });
     }
 
     // Validate the title in blog
-    if (!data.title) {
-      return res.status(400).send({
-        status: false,
-        msg: "Please Provide Blog Title",
-      });
+    if (!data.title) 
+    { 
+    return res.status(400).send({status: false,msg: "Please Provide Blog Title"});
     }
 
     // Validate the body in blog
-    if (!data.body) {
-      return res.status(400).send({
-        status: false,
-        msg: "Please Provide Blog Body",
-      });
+    if (!data.body)
+    {
+    return res.status(400).send({status: false,msg: "Please Provide Blog Body"});
     }
 
     // Validate that authorid is coming or not in blog
-    if (!data.authorId) {
-      return res.status(400).send({
-        status: false,
-        msg: "Please Provide Blog Author Id",
-      });
+    if (!data.authorId) 
+    {
+    return res.status(400).send({status: false,msg: "Please Provide Blog Author Id"});
     }
 
     // Validate the authorId
-    if (!isValidObjectId(data.authorId)) {
-      return res.status(400).send({
-        status: false,
-        msg: " AuthorId is invalid",
-      });
+    if (!isValidObjectId(data.authorId)) 
+    {
+    return res.status(400).send({status: false, msg: " AuthorId is invalid"});
     }
 
     // Validate the category in blog
-    if (!data.category) {
-      return res.status(400).send({
-        status: false,
-        msg: "Please Provide Blog category",
-      });
+    if (!data.category) 
+    {
+    return res.status(400).send({status: false, msg: "Please Provide Blog category"});
     }
 
     if (data.isPublished == true) {
-      data.publishedAt = new Date();
+      data.publishedAt = new Date().toISOString();
     }
 
     let blogDetails = await blogModels.create(data);
-    res.status(201).send({
-      status: true,
-      msg: "Blog is Successfully Created",
-      data: blogDetails,
-    });
-  } catch (err) {
+    res.status(201).send({status: true, msg: "Blog is Successfully Created", data: blogDetails});
+  }
+  catch (err) 
+  {
     return res.status(500).send({ status: false, err: err.message });
   }
 };
@@ -77,13 +65,25 @@ const createBlogs = async function (req, res) {
 // Getting Blogs by filter queries
 const getBlogs = async function (req, res) {
   try {
+
     let queryData = req.query;
+
+    // Check queries are coming or not
+    if (Object.keys(queryData).length == 0) { 
+      return res.status(400).send({ status: false, msg: "Invalid request !! Please Provide Blog Details"})
+    }
 
     // check whether this of data
     if (!(queryData.authorId ||queryData.category ||queryData.tags ||queryData.subcategory)) {
       return res.status(400).send({ status: false, msg: "Invalid Filters" });
     }
 
+    let decodedToken =  req.decodedToken
+    /// Authorise the author that is requesting to find blogs
+    if(queryData.authorId != null && queryData.authorId != decodedToken.authorId )
+    {
+    return res.status(400).send({status: false , msg: "Author is Different"})
+    }
 
     // exclude title and body
     if (req.query.title && !req.query.body) delete req.query.title;
@@ -93,7 +93,7 @@ const getBlogs = async function (req, res) {
       delete req.query.body;
     }
 
-   queryData = req.query;
+    queryData = req.query;
 
     if (queryData.authorId && !isValidObjectId(queryData.authorId)) {
       return res
@@ -101,21 +101,25 @@ const getBlogs = async function (req, res) {
         .send({ status: false, msg: "AuthorId is Invalid" });
     }
 
-    if (queryData.authorId) {
+    if (queryData.authorId != null) {
       let authorId = await authorModels.findById(queryData.authorId);
       if (!authorId) {
         return res.status(404).send({ status: false, msg: "Author not Found" });
       }
     }
-
+    // We have to find blogs which are deleted and blogs which are published
     queryData.isDeleted = false;
     queryData.isPublished = true;
     const blogData = await blogModels.find(queryData);
     // console.log(blogData);
-    if (blogData.length == 0) {
+    if (blogData.length == 0) 
+    {
       return res.status(404).send({ status: false, msg: "Document Not Found" });
     }
     return res.status(200).send({ status: true, data: blogData });
+
+
+
   } catch (err) {
     return res.status(500).send({ status: false, err: err.message });
   }
@@ -124,6 +128,7 @@ const getBlogs = async function (req, res) {
 // Updating blogs by given requirement
 const update = async function (req, res) {
   try {
+
     let blog = req.body;
     //  check the blog data coming or not
     if (Object.keys(blog).length == 0) {
@@ -138,9 +143,9 @@ const update = async function (req, res) {
      //extract id
     let blogId = req.params.blogId;
     //check valid id or not
-    if (!isValidObjectId(blogId)) {
-      return res.status(400).send({ status: false, msg: "Invalid Blog-Id" });
-    }
+    // if (!isValidObjectId(blogId)) {
+    //   return res.status(400).send({ status: false, msg: "Invalid Blog-Id" });
+    // }
 
     let blogData = await blogModels.findById(blogId);
 
@@ -150,7 +155,7 @@ const update = async function (req, res) {
 
     if (blogData.isPublished == false && blog.isPublished == true) {
       blogData.isPublished = true;
-      blogData.publishedAt = new Date();
+      blogData.publishedAt = new Date().toISOString();
     }
     await blogData.save();
 
@@ -163,11 +168,8 @@ const update = async function (req, res) {
       { new: true }
     );
 
-    res.status(200).send({
-      status: true,
-      msg: "Blog Updated Successfully",
-      updatedData: updatedBlog,
-    });
+    res.status(200).send({status: true,msg: "Blog Updated Successfully",updatedData: updatedBlog });
+
   } catch (err) {
     return res.status(500).send({ status: false, err: err.message });
   }
@@ -180,33 +182,18 @@ const deleteBlog = async function (req, res) {
     //check valid blog id
     let blogId = req.params.blogId;
 
-    if (!isValidObjectId(blogId)){
-      return res.status(400).send({ status: false, msg: "Invalid Blog-Id" });
-    }
+  //   if (!isValidObjectId(blogId))
+  //   {
+  //   return res.status(400).send({ status: false, msg: "Invalid Blog-Id" 
+  // });
+  //   }
 
     // find blog data
 
     let blogData = await blogModels.findById(blogId);
 
     // console.log(blogData);
-    // //-----------------------------------------------------------------------------------------------------------------------
-    // // AUTHORIZATION
-    // // Extract BlogId for which the request is made. In this case message to be posted Or Want to update And Delete Something.
-
-    //  let BlogToBeModified = blogData.authorId;
-
-    // // Extract AuthorId for the logged-in user
-    //  let  decodedToken= req.decodedToken
-    //  let AuthorLoggedIn = decodedToken.authorId;
- 
-    // // AuthorId comparision to check if the logged-in Author is requesting for their own data
-    //  if (BlogToBeModified != AuthorLoggedIn){
-    //  return res.send({ status: false, msg: "Author Logged in is not Allowed to Modify the Requested Blog Data"});
-
-    //  }
-
-    // //-----------------------------------------------------------------------------------------------------------------------
-
+   
     if (!blogData || blogData.isDeleted == true) {
       res.status(404).send({ status: false, msg: "Data Not Found" });
     }
@@ -223,22 +210,52 @@ const deleteBlog = async function (req, res) {
 // Updating blogs by given requirement i.e Deletion
 const deleteByQuery = async function (req, res) {
   try {
+
     let queryData = req.query;
 
+    let decodedToken = req.decodedToken
+
+    if(queryData.authorId && decodedToken.authorId != queryData.authorId ){
+        return res.status(403).send({status: false , msg: "Author is not allowed to perform this task"})
+    } 
+    
+    queryData.authorId = decodedToken.authorId;
+
+    // check delete queries
     if (!(queryData.category || queryData.authorId || queryData.tags || queryData.subcategory)) {
       return res.status(404).send({ status: false, msg: "Invalid Request...." });
     }
-
     
+    // Check that author who is requesting to delete has valid id or not
+    if (queryData.authorId && !(isValidObjectId(queryData.authorId))){
+      return res.status(400).send( {status: false, msg: 'AuthorId is Invalid'})
+   }
+
+   // Check the Author is Exists in Author Collection Or not
+   if(queryData.authorId)
+   {
+    let authorId = await authorModels.findById(queryData.authorId)
+    if(!authorId) 
+    {
+    return res.status(404).send({status: false , msg:"Author not Found"})   
+    }
+    }
+
+
+    // Ensuring that that data is not deleted
     queryData.isDeleted = false;
     let data1 = await blogModels.updateMany(
       queryData,
-      { isDeleted: true, deletedAt: new Date() },
+      { isDeleted: true, deletedAt: new Date().toDateString() },
       { new: true }
     );
 
+  if(!data1)
+  {
+  return res.status(404).send({status:false,msg:"No Match Has Been Found"})  
+  }
     return res.status(200).send({ status: true, status: "Blog Deleted Successfully", msg: data1 });
-    
+
   } catch (err) {
     return res.status(500).send({ status: false, err: err.message });
   }
