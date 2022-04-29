@@ -43,6 +43,14 @@ const createBlogs = async function (req, res) {
     return res.status(400).send({status: false, msg: " AuthorId is invalid"});
     }
 
+    // Check Author Exists in database or not 
+    let authorId = await authorModels.findById(data.authorId)
+        
+    if(!authorId) 
+    {
+    return res.status(400).send({status: false , msg:" Author is Not Present In Database"})   
+    }
+
     // Validate the category in blog
     if (!data.category) 
     {
@@ -84,6 +92,7 @@ const getBlogs = async function (req, res) {
     // Storing Decoded Token into variable named decodedToken
     let decodedToken =  req.decodedToken
     /// Authorise the author that is requesting to find blogs
+    // Validate the authorId with help of decoded Token AuthorId if it is present in req.query
     if(queryData.authorId != null && queryData.authorId != decodedToken.authorId )
     {
     return res.status(400).send({status: false , msg: "Author is Different"})
@@ -106,13 +115,14 @@ const getBlogs = async function (req, res) {
     }
 
     // Make Sure that Author Id must Not be Null
-    if (queryData.authorId != null) {
-      let authorId = await authorModels.findById(queryData.authorId);
-      if (!authorId) 
-      {
-        return res.status(404).send({ status: false, msg: "Author not Found" });
-      }
-    }
+    // Second Method which we perform above with the help of decoded token author id  
+    // if (queryData.authorId != null) {
+    //   let authorId = await authorModels.findById(queryData.authorId);
+    //   if (!authorId) 
+    //   {
+    //     return res.status(404).send({ status: false, msg: "Author not Found" });
+    //   }
+    // }
 
 
     // We have to find blogs which are deleted and blogs which are published

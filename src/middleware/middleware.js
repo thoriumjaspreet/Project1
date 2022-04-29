@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const isValidObjectId = function (objectId) {
   return mongoose.Types.ObjectId.isValid(objectId);
 };
-
+const blogModels= require("../models/blogModel.js")
 
 
 
@@ -24,8 +24,8 @@ const login = async function(req,res,next){
     //if token is present then decode the token
     let decodedToken = jwt.verify(token,"Blogging-Site")
     
-    // check Decoded token is here or not
-    if(!decodedToken) return res.status(401).send({ status : false, msg : "Token is Invalid"})
+    // Check Decoded token is here or not
+    if(!decodedToken) return res.status(401).send({ status : false, msg : "Token is Not Present"})
 
     req.decodedToken = decodedToken 
     // if Everything is ok then we head towards Api's
@@ -33,7 +33,7 @@ const login = async function(req,res,next){
 
 }catch(err)
 {
-    res.status(500).send({ status: false, err : err.message })
+res.status(401).send({ status: false, err : "Token is Invalid" })
 }
 }
 
@@ -63,7 +63,7 @@ const AuthorizationById = async function (req, res, next) {
     next();
   }
   catch (err) {
-    res.status(500).send({ status: false, Error: error.message });
+    res.status(500).send({ status: false, err: err.message });
   }
 };
 

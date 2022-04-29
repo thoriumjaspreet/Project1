@@ -5,7 +5,7 @@ const blogController = require("../controllers/blogController.js");
 const mw = require("../middleware/middleware.js")
 
 
-//------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------------------------------------
 // AUTHOR ROUTES
 // create Author
 router.post("/createAuthor", authorController.createAuthor);
@@ -14,7 +14,7 @@ router.post("/createAuthor", authorController.createAuthor);
 router.post("/login", authorController.loginAuthor);
 
 
-//--------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------------------------------------
 // BLOG ROUTES (PROTECTED API'S)
 
 // Create Blog

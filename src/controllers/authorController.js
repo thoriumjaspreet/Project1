@@ -55,7 +55,7 @@ const createAuthor = async function (req, res) {
     }
 
     // validate the password of author
-    if (data.password < 8 ) {
+    if ((data.password).length < 8 ) {
       return res
         .status(400)
         .send({ status: false, msg: "Please Provide Password Of Author " });
