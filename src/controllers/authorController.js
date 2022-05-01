@@ -37,8 +37,9 @@ const createAuthor = async function (req, res) {
         .status(400)
         .send({ status: false, msg: "Please Provide Email Of Author " });
     }
+
     // Validate the email correctly
-    if (!/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(data.email)) {
+        if (!/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(data.email)) {
       res.status(400).send({
         status: false,
         message: "Email should be a valid email address",
@@ -70,9 +71,8 @@ const createAuthor = async function (req, res) {
     }
 
     let author = await authorModels.create(data);
-    res
-      .status(200)
-      .send({ status: true, msg: "Author Successfully Created", data: author });
+    res.status(200).send({ status: true, msg: "Author Successfully Created", data: author });
+
   } catch (err) {
     res.status(500).send({ status: false, msg: err.message });
   }
@@ -81,6 +81,7 @@ const createAuthor = async function (req, res) {
 
 // LOGIN AUTHOR INTO IT
 const loginAuthor = async function(req,res){
+  
   try{
     
   // first checck that body is coming or not

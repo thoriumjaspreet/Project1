@@ -27,7 +27,7 @@ const createBlogs = async function (req, res) {
     let decodedToken =  req.decodedToken
     /// Authorise the author that is requesting to find blogs
     // Validate the authorId with help of decoded Token AuthorId if it is present in req.query
-    if(queryData.authorId != null && queryData.authorId != decodedToken.authorId )
+    if(data.authorId != null && data.authorId != decodedToken.authorId )
     {
     return res.status(400).send({status: false , msg: "Author is Different"})
     }
@@ -54,7 +54,7 @@ const createBlogs = async function (req, res) {
     // Validate the authorId
     if (!isValidObjectId(data.authorId)) 
     {
-    return res.status(400).send({status: false, msg: " AuthorId is invalid"});
+    return res.status(400).send({status: false, msg: "AuthorId is invalid"});
     }
 
     // Check Author Exists in database or not 
@@ -94,13 +94,13 @@ const getBlogs = async function (req, res) {
     // Check queries are coming or not
     if (Object.keys(queryData).length == 0) 
     { 
-      return res.status(400).send({ status: false, msg: "Invalid request !! Please Provide Blog Details"})
+      return res.status(400).send({ status: false, msg: "Invalid request !! Please Provide Blog Queries For Finding Blogs"})
     }
 
     // check whether this of data
     if (!(queryData.authorId ||queryData.category ||queryData.tags ||queryData.subcategory)) 
     {
-      return res.status(400).send({ status: false, msg: "Invalid Filters" });
+      return res.status(400).send({ status: false, msg: "Invalid Filters!!!. Please Provide Valid Filters" });
     }
     
     // Storing Decoded Token into variable named decodedToken
@@ -150,6 +150,7 @@ const getBlogs = async function (req, res) {
     {
       return res.status(404).send({ status: false, msg: "Document Not Found" });
     }
+
     return res.status(200).send({ status: true, data: blogData });
 
   } catch (err) {
@@ -157,7 +158,7 @@ const getBlogs = async function (req, res) {
   }
 };
 
-// Updating blogs by given requirement
+// Updating blogs By ID by given requirement
 const update = async function (req, res) {
   try {
 
@@ -165,13 +166,13 @@ const update = async function (req, res) {
     //  check the blog data coming or not
     if (Object.keys(blog).length == 0) 
     {
-      return res.status(400).send({status: false,msg: "Invalid request !! Please Provide Blog Details" });
+      return res.status(400).send({status: false,msg: "Invalid request !! Please Provide Blog Details For Updating The Blog" });
     }
 
     // check query data
     if (! (blog.title || blog.body || blog.tags || blog.subcategory || blog.isPublished)) 
     {
-      return res.status(400).send({ status: false, msg: "Invalid Filters" });
+      return res.status(400).send({ status: false, msg: "Invalid Filters!!!. Please Provide Valid Filters" });
     }
  
      //extract id from Path Params
@@ -212,7 +213,7 @@ const update = async function (req, res) {
   }
 };
 
-// Updating blogs by given requirement i.e Deleting
+// Delete Blogs By ID by given requirement i.e Deleting
 const deleteBlog = async function (req, res) {
   try {
 
@@ -229,7 +230,7 @@ const deleteBlog = async function (req, res) {
     }
 
     blogData.isDeleted = true;
-    blogData.deletedAt = new Date();
+    blogData.deletedAt = new Date().toISOString();
     await blogData.save();
     return res.status(200).send();
 
