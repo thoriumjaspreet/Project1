@@ -6,6 +6,10 @@ const isValidObjectId = function (objectId) {
   return mongoose.Types.ObjectId.isValid(objectId);
 };
 
+// const check = function (x){
+// return x.every(i => typeof(i) === "string")
+// }
+
 // Creating Blog Model
 const createBlogs = async function (req, res) {
   try {
@@ -19,14 +23,24 @@ const createBlogs = async function (req, res) {
       return res.status(400).send({status: false,msg: "Invalid request !! Please Provide Blog Details" });
     }
 
+    // Storing Decoded Token into variable named decodedToken
+    let decodedToken =  req.decodedToken
+    /// Authorise the author that is requesting to find blogs
+    // Validate the authorId with help of decoded Token AuthorId if it is present in req.query
+    if(queryData.authorId != null && queryData.authorId != decodedToken.authorId )
+    {
+    return res.status(400).send({status: false , msg: "Author is Different"})
+    }
+
     // Validate the title in blog
-    if (!data.title) 
+    let checkString = /[a-zA-Z]/
+    if (!data.title || ! (checkString.test(data.tile))) 
     { 
     return res.status(400).send({status: false,msg: "Please Provide Blog Title"});
     }
 
     // Validate the body in blog
-    if (!data.body)
+    if (!data.body || !checkString.test(data.body))
     {
     return res.status(400).send({status: false,msg: "Please Provide Blog Body"});
     }
@@ -63,7 +77,7 @@ const createBlogs = async function (req, res) {
     }
 
     let blogDetails = await blogModels.create(data);
-    res.status(201).send({status: true, msg: "Blog is Successfully Created", data: blogDetails});
+    res.status(201).send({status: true, msg: "Blog Created Successfully", data: blogDetails});
   }
   catch (err) 
   {
@@ -291,9 +305,15 @@ const deleteByQuery = async function (req, res) {
   }
 };
 
-module.exports.createBlogs = createBlogs;
-module.exports.getBlogs = getBlogs;
-module.exports.update = update;
-module.exports.deleteBlog = deleteBlog;
-module.exports.deleteByQuery = deleteByQuery;
-  //ankit
+// module.exports.createBlogs = createBlogs;
+// module.exports.getBlogs = getBlogs;
+// module.exports.update = update;
+// module.exports.deleteBlog = deleteBlog;
+// module.exports.deleteByQuery = deleteByQuery;
+module.exports = {
+createBlogs : createBlogs,
+getBlogs : getBlogs,
+update : update,
+deleteBlog : deleteBlog,
+deleteByQuery : deleteByQuery
+}

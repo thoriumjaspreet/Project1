@@ -14,14 +14,14 @@ const newSchema = new mongoose.Schema(
     authorId: {
       type: ObjectId,
       ref: "Author",
-      required:true
+      required: true
     },
     tags: [String],
     category: {
       type: String,
       required: true,
     },
-    subcategory: [String],
+    subcategory:[String],
     isDeleted: {
       type: Boolean,
       default: false,
