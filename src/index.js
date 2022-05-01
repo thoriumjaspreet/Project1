@@ -9,7 +9,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 mongoose
   .connect(
-    "mongodb+srv://Sai0047:rXxgqYKPqwnhcXX7@cluster0.qptsw.mongodb.net/Blogging_Site_Project_1",
+    "mongodb+srv://rohanDb:iamjerry@cluster0.etldx.mongodb.net/cheema-DB?retryWrites=true&w=majority",
     {
       useNewUrlParser: true,
     }
@@ -20,5 +20,5 @@ mongoose
 app.use("/", route);
 
 app.listen(process.env.PORT || 3000, function () {
-  console.log(" 😍😍Express app running on port" + (process.env.PORT || 3000));
+  console.log(" Express app running on port" + (process.env.PORT || 3000));
 });
