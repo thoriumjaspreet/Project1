@@ -305,11 +305,7 @@ const deleteByQuery = async function (req, res) {
   }
 };
 
-// module.exports.createBlogs = createBlogs;
-// module.exports.getBlogs = getBlogs;
-// module.exports.update = update;
-// module.exports.deleteBlog = deleteBlog;
-// module.exports.deleteByQuery = deleteByQuery;
+
 module.exports = {
 createBlogs : createBlogs,
 getBlogs : getBlogs,
