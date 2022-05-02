@@ -25,7 +25,7 @@ const createBlogs = async function (req, res) {
 
     // Storing Decoded Token into variable named decodedToken
     let decodedToken =  req.decodedToken
-    /// Authorise the author that is requesting to find blogs
+    // Authorize the author that is requesting to find blogs
     // Validate the authorId with help of decoded Token AuthorId if it is present in req.query
     if(data.authorId != null && data.authorId != decodedToken.authorId )
     {
@@ -45,7 +45,7 @@ const createBlogs = async function (req, res) {
     return res.status(400).send({status: false,msg: "Please Provide Blog Body"});
     }
 
-    // Validate that authorid is coming or not in blog
+    // Validate that authorId is coming or not in blog
     if (!data.authorId) 
     {
     return res.status(400).send({status: false,msg: "Please Provide Blog Author Id"});
@@ -132,7 +132,7 @@ const getBlogs = async function (req, res) {
     
     // Storing Decoded Token into variable named decodedToken
     let decodedToken =  req.decodedToken
-    /// Authorise the author that is requesting to find blogs
+    // Authorize the author that is requesting to find blogs
     // Validate the authorId with help of decoded Token AuthorId if it is present in req.query
     if(queryData.authorId != null && queryData.authorId != decodedToken.authorId )
     {
@@ -155,9 +155,9 @@ const getBlogs = async function (req, res) {
       return res.status(400).send({ status: false, msg: "AuthorId is Invalid" });
     }
 
-    if(queryData.category) queryData.category = queryData.category.toLowerCase().trim()  // remove the space in category and save in lowecase
-    if(queryData.tags) queryData.tags = queryData.tags.toLowerCase().trim()  // remove the space in tags and save in lowecase
-    if(queryData.subcategory) queryData.subcategory = queryData.subcategory.toLowerCase().trim()   // remove the space in subcategory and save in lowecase
+    if(queryData.category) queryData.category = queryData.category.toLowerCase().trim()  // Remove the space in category and save in lowercase
+    if(queryData.tags) queryData.tags = queryData.tags.toLowerCase().trim()  // Remove the space in tags and save in lowercase
+    if(queryData.subcategory) queryData.subcategory = queryData.subcategory.toLowerCase().trim()   //Remove the space in subcategory and save in lowercase
   
     // for array data like tags and subcategory
     for (let key in queryData) {
@@ -272,7 +272,7 @@ const update = async function (req, res) {
   }
 };
 
-// Delete Blogs By ID by given requirement i.e Deleting
+// Delete Blogs By ID by given requirement
 const deleteBlog = async function (req, res) {
   try {
 
@@ -310,7 +310,7 @@ const deleteByQuery = async function (req, res) {
       return res.status(400).send({ status: false, msg: "Invalid request !! Please Provide Blog Details"})
      }
 
-    // Authorise the author that is requesting to find blogs
+    // Authorize the author that is requesting to find blogs
     let decodedToken = req.decodedToken
     if(queryData.authorId && decodedToken.authorId != queryData.authorId )
     {
@@ -343,9 +343,9 @@ const deleteByQuery = async function (req, res) {
   }
 
 
-  if(queryData.category) queryData.category = queryData.category.toLowerCase().trim()  // remove the space in category and save in lowecase
-  if(queryData.tags) queryData.tags = queryData.tags.toLowerCase().trim()  // remove the space in tags and save in lowecase
-  if(queryData.subcategory) queryData.subcategory = queryData.subcategory.toLowerCase().trim()   // remove the space in subcategory and save in lowecase
+  if(queryData.category) queryData.category = queryData.category.toLowerCase().trim()  // Remove the space in category and save in lowercase
+  if(queryData.tags) queryData.tags = queryData.tags.toLowerCase().trim()  // Remove the space in tags and save in lowercase
+  if(queryData.subcategory) queryData.subcategory = queryData.subcategory.toLowerCase().trim()   // Remove the space in subcategory and save in lowercase
   
 
   // Ensuring that that data is not deleted

@@ -84,36 +84,36 @@ const loginAuthor = async function(req,res){
   
   try{
     
-  // first checck that body is coming or not
+  // first check that body is coming or not
 
   let data = req.body;
-  let Authoremail = req.body.email;
-  let Authorpassword = req.body.password;
+  let authorEmail = req.body.email;
+  let authorPassword = req.body.password;
 
   if(!data){
     return res.status(404).send({status:false,msg:"Please Enter Author Credentials!!"})
   }
 
   // validate the email of author is Coming in data or not
-  if (!Authoremail) 
+  if (!authorEmail) 
   {
     return res.status(400).send({ status: false, msg: "Please Provide Email Of Author " });
   }
 
   // Validate the email correctly
-  if (!/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(Authoremail)) 
+  if (!/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(authorEmail)) 
   {
     res.status(400).send({status: false,message: "Email should be a valid email address"});
   }
 
   // validate the password of author
-  if (!Authorpassword) 
+  if (!authorPassword) 
   { 
    return res.status(400).send({ status: false, msg: "Please Provide Password Of Author " });
   }
  
   // Find Author in Author Collection
-  let author = await authorModels.findOne({ email : Authoremail , password : Authorpassword })
+  let author = await authorModels.findOne({ email : authorEmail , password : authorPassword })
   
   // Generating JWT  
   let token = jwt.sign({ authorId: author._id.toString(), Name: "Author"},"Blogging-Site" )
@@ -121,7 +121,7 @@ const loginAuthor = async function(req,res){
   // Send the token to Response Header
   res.setHeader("x-api-key", token);
 
-  // send response to  user that Author is successfully logined
+  // send response to  user that Author is successfully logged in
   res.status(200).send({status: true, message: "Author login successfully", data: { token }});
 
   }catch (err) 
