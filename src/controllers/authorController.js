@@ -33,8 +33,9 @@ const createAuthor = async function (req, res) {
         .status(400)
         .send({ status: false, msg: "Please Provide Email Of Author " });
     }
+
     // Validate the email correctly
-    if (!/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(data.email)) {
+        if (!/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(data.email)) {
       res.status(400).send({
         status: false,
         message: "Email should be a valid email address",

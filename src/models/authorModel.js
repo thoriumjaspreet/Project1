@@ -2,8 +2,14 @@ const mongoose = require("mongoose");
 
 const newSchema = new mongoose.Schema(
   {
-    fname: String,
-    lname: String,
+    fname: {
+      type:String,
+      required:true 
+    },
+    lname: {
+      type:String,
+      required:true
+    },
     title: {
       type: String,
       required: true,
@@ -12,6 +18,7 @@ const newSchema = new mongoose.Schema(
     email: {
       type: String,
       unique: true,
+      lowercase:true,
       required: true,
     },
     password: {

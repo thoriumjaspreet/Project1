@@ -12,8 +12,6 @@ router.post("/login", authorController.loginAuthor)
 // Create Blog
 router.post("/createBlogs",mw.Authentication, blogController.createBlogs);
 
-// Get Blogs by query
-router.get("/getBlogs", blogController.getBlogs);
 
 // Update Blog by id
 router.put("/getBlogs/:blogId",mw.Authentication,mw.AuthorizationById, blogController.update);
