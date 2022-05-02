@@ -336,12 +336,8 @@ const deleteByQuery = async function (req, res) {
    if(queryData.authorId)
    {
     let authorId = await authorModels.findById(queryData.authorId)
-    if(!authorId) 
-    {
-    return res.status(404).send({status: false , msg:"Author not Found"})   
-    }
-  }
-
+    if(!authorId) { return res.status(404).send({status: false , msg:"Author not Found"}) } 
+   }
 
   if(queryData.category) queryData.category = queryData.category.toLowerCase().trim()  // Remove the space in category and save in lowercase
   if(queryData.tags) queryData.tags = queryData.tags.toLowerCase().trim()  // Remove the space in tags and save in lowercase
