@@ -6,9 +6,9 @@ const isValidObjectId = function (objectId) {
   return mongoose.Types.ObjectId.isValid(objectId);
 };
 
-// const check = function (x){
-// return x.every(i => typeof(i) === "string")
-// }
+const check = function (x){
+return x.every(i => typeof(i) === "string")
+}
 
 // Creating Blog Model
 const createBlogs = async function (req, res) {
@@ -66,11 +66,38 @@ const createBlogs = async function (req, res) {
     }
 
     // Validate the category in blog
-    if (!data.category) 
+    if (data.category.length == 0 || !(checkString.test(data.category))) 
     {
     return res.status(400).send({status: false, msg: "Please Provide Blog category"});
     }
 
+  //save data in lowercase and remove the spaces
+    data.category = data.category.toLowerCase().trim()
+
+    //validate the tags in blog
+    if( data.tags != undefined && check(data.tags) == false){
+      return res.status(400).send({ status: false, msg: "Please Provide Valid Tags"})
+    }
+
+
+    // validate the Subcategory in blog
+    if( data.subcategory != undefined &&  check(data.subcategory)== false){
+      return res.status(400).send({ status: false, msg: "Please Provide Valid Subcategory"})
+    }
+
+    // For Array Data Like Tags and Subcategory
+    for (let key in data) {
+      if (Array.isArray(data[key])) {
+          let arr=[];
+          for (let i = 0; i < data[key].length; i++) {
+                  if(data[key][i].trim().length>0)
+              arr.push(data[key][i].toLowerCase().trim())
+          }
+          data[key] = [...arr];
+      }
+  }
+  
+    // Lets Add the Date isPublished if True 
     if (data.isPublished == true) 
     {
       data.publishedAt = new Date().toISOString();
@@ -128,6 +155,22 @@ const getBlogs = async function (req, res) {
       return res.status(400).send({ status: false, msg: "AuthorId is Invalid" });
     }
 
+    if(queryData.category) queryData.category = queryData.category.toLowerCase().trim()  // remove the space in category and save in lowecase
+    if(queryData.tags) queryData.tags = queryData.tags.toLowerCase().trim()  // remove the space in tags and save in lowecase
+    if(queryData.subcategory) queryData.subcategory = queryData.subcategory.toLowerCase().trim()   // remove the space in subcategory and save in lowecase
+  
+    // for array data like tags and subcategory
+    for (let key in queryData) {
+      if (Array.isArray(queryData[key])) {
+          let arr=[];
+          for (let i = 0; i < queryData[key].length; i++) {
+                  if(queryData[key][i].trim().length>0)
+              arr.push(queryData[key][i].toLowerCase().trim())
+          }
+          queryData[key] = [...arr];
+      }
+    }
+
     // Make Sure that Author Id must Not be Null
     // Second Method which we perform above with the help of decoded token author id  
     // if (queryData.authorId != null) {
@@ -182,6 +225,7 @@ const update = async function (req, res) {
     //   return res.status(400).send({ status: false, msg: "Invalid Blog-Id" });
     // }
 
+    
     let blogData = await blogModels.findById(blogId);
 
     if (!blogData || blogData.isDeleted == true) 
@@ -189,11 +233,26 @@ const update = async function (req, res) {
       return res.status(404).send({ status: false, msg: "Document Not Found" });
     }
 
+
+     // for array data like tags and subcategory
+     for (let key in blog) {
+      if (Array.isArray(blog[key])) {
+          let arr=[];
+          for (let i = 0; i < blog[key].length; i++) {
+                  if(blog[key][i].trim().length>0)
+              arr.push(blog[key][i].toLowerCase().trim())
+          }
+          blog[key] = [...arr];
+      }
+    }
+    
+    // If Blog is published or not
     if (blogData.isPublished == false && blog.isPublished == true) 
     {
       blogData.isPublished = true;
       blogData.publishedAt = new Date().toISOString();
     }
+    //Save the data 
     await blogData.save();
 
     // After Above All Conditions We Update Data
@@ -282,6 +341,12 @@ const deleteByQuery = async function (req, res) {
     return res.status(404).send({status: false , msg:"Author not Found"})   
     }
   }
+
+
+  if(queryData.category) queryData.category = queryData.category.toLowerCase().trim()  // remove the space in category and save in lowecase
+  if(queryData.tags) queryData.tags = queryData.tags.toLowerCase().trim()  // remove the space in tags and save in lowecase
+  if(queryData.subcategory) queryData.subcategory = queryData.subcategory.toLowerCase().trim()   // remove the space in subcategory and save in lowecase
+  
 
   // Ensuring that that data is not deleted
     queryData.isDeleted = false;
