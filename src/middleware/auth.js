@@ -2,7 +2,7 @@ const jwt=require("jsonwebtoken")
 const blogModel=require("../models/blogModel")
 const Authentication= async function(req,res,next){
  
- try{
+  try{
 
 
     // take token from client 
@@ -16,16 +16,16 @@ const Authentication= async function(req,res,next){
     //if token is present then decode the token
     let decodedToken = jwt.verify(token,"Author-blogging")
     
-    // check Decoded token is here or not
-    if(!decodedToken) return res.status(401).send({ status : false, msg : "Token is Invalid"})
+    // Check Decoded token is here or not
+    if(!decodedToken) return res.status(401).send({ status : false, msg : "Token is Not Present"})
 
     req.decodedToken = decodedToken 
     // if Everything is ok then we head towards Api's
-    next()
+    next();
 
 }catch(err)
 {
-    res.status(500).send({ status: false, err : err.message })
+res.status(401).send({ status: false, err : "Token is Invalid" })
 }
 }
 
