@@ -5,23 +5,26 @@ const newSchema = new mongoose.Schema(
   {
     title: {
       type: String,
-      required: true,
+      required: "Blog title is required",
+      trim:true
     },
     body: {
       type: String,
-      required: true,
+      required: "Blog body is required",
+      trim:true
     },
     authorId: {
       type: ObjectId,
       ref: "Author",
-      required: true
+      required: "AuthorId is required"
     },
-    tags: [String],
+    tags: [{type:String,trim:true}],
     category: {
       type: String,
-      required: true,
+      required:"Category is required",
+      trim:true
     },
-    subcategory:[String],
+    subcategory:[{type:String,trim:true}],
     isDeleted: {
       type: Boolean,
       default: false,

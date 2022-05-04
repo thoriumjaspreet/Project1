@@ -6,6 +6,7 @@ const jwt = require("jsonwebtoken")
 // CREATING AUTHOR
 const createAuthor = async function (req, res) {
   try {
+    
     let data = req.body;
 
     /// validate the data first
@@ -16,13 +17,13 @@ const createAuthor = async function (req, res) {
       });
     }
 
-    // validate the first name of author
-    if (!data.fname) {
-      return res.status(400).send({
-        status: false,
-        msg: "Please Provide Provide First Name Of Author ",
-      });
-    }
+    // // validate the first name of author
+    // if (!data.fname) {
+    //   return res.status(400).send({
+    //     status: false,
+    //     msg: "Please Provide Provide First Name Of Author ",
+    //   });
+    // }
 
     // validate the Last Name of author
     if (!data.lname) {
@@ -38,13 +39,13 @@ const createAuthor = async function (req, res) {
         .send({ status: false, msg: "Please Provide Email Of Author " });
     }
 
-    // Validate the email correctly
-        if (!/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(data.email)) {
-      res.status(400).send({
-        status: false,
-        message: "Email should be a valid email address",
-      });
-    }
+    // // Validate the email correctly
+    //     if (!/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(data.email)) {
+    //   res.status(400).send({
+    //     status: false,
+    //     message: "Email should be a valid email address",
+    //   });
+    // }
 
     // Validate the already existing email
     let alreadyExist = await authorModels.findOne({ email: data.email });

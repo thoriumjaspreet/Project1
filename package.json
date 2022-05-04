@@ -196,6 +196,7 @@
     "update-notifier": "^5.1.0",
     "url-parse-lax": "^3.0.0",
     "utils-merge": "^1.0.1",
+    "validator": "^13.7.0",
     "vary": "^1.1.2",
     "webidl-conversions": "^7.0.0",
     "whatwg-url": "^11.0.0",

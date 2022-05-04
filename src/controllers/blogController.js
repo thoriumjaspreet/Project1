@@ -5,7 +5,7 @@ const mongoose = require("mongoose");
 const isValidObjectId = function (objectId) {
   return mongoose.Types.ObjectId.isValid(objectId);
 };
-
+p
 const check = function (x){
 return x.every(i => typeof(i) === "string")
 }
@@ -369,9 +369,9 @@ const deleteByQuery = async function (req, res) {
 
 
 module.exports = {
-createBlogs : createBlogs,
-getBlogs : getBlogs,
-update : update,
-deleteBlog : deleteBlog,
-deleteByQuery : deleteByQuery
+createBlogs,
+getBlogs,
+update,
+deleteBlog,
+deleteByQuery
 }
