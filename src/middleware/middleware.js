@@ -54,7 +54,7 @@ const AuthorizationById = async function (req, res, next) {
     let decodedToken =  req.decodedToken
     let AuthorLoggedIn = decodedToken.authorId;
 
-    // AuthorId comparision to check if the logged-in Author is requesting for their own data
+    // AuthorId comparison to check if the logged-in Author is requesting for their own data
     if (BlogToBeModified != AuthorLoggedIn)
     {
     return res.status(401).send({ status: false, msg: "Author Logged in is not Allowed to Modify the Requested Blog Data"});

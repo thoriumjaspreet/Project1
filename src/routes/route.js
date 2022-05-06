@@ -18,18 +18,18 @@ router.post("/login", authorController.loginAuthor);
 // BLOG ROUTES (PROTECTED API'S)
 
 // Create a New Blog.
-router.post("/createBlogs", mw.login,blogController.createBlogs);
+router.post("/createBlogs", mw.login, blogController.createBlogs);
 
 // Get Blogs by Query.
-router.get("/getBlogs",  mw.login,blogController.getBlogs);
+router.get("/getBlogs", mw.login,blogController.getBlogs);
 
 // Update Blog by BlogId.
-router.put("/UpdateBlogs/:blogId",mw.login,mw.AuthorizationById, blogController.update);
+router.put("/UpdateBlogs/:blogId", mw.login, mw.AuthorizationById, blogController.updateBlogs);
 
 // Delete Blog by BlogId.
-router.delete("/deleteBlogsById/:blogId",mw.login,mw.AuthorizationById ,blogController.deleteBlog);
+router.delete("/deleteBlogsById/:blogId", mw.login, mw.AuthorizationById ,blogController.deleteBlog);
 
 // Delete By Query Params.
-router.delete("/deleteBlogsByQuery", mw.login,blogController.deleteByQuery);
+router.delete("/deleteBlogsByQuery", mw.login, blogController.deleteByQuery);
 
 module.exports = router;

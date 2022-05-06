@@ -9,73 +9,55 @@ const createAuthor = async function (req, res) {
     
     let data = req.body;
 
-    /// validate the data first
+    // Validate the data first
     if (Object.keys(data).length == 0) {
-      return res.status(400).send({
-        status: false,
-        msg: "Invalid request !! Please Provide Author Details ",
-      });
+      return res.status(400).send({ status: false, msg: "Invalid request !! Please Provide Author Details "});
     }
 
-    // // validate the first name of author
-    // if (!data.fname) {
-    //   return res.status(400).send({
-    //     status: false,
-    //     msg: "Please Provide Provide First Name Of Author ",
-    //   });
-    // }
-
-    // validate the Last Name of author
-    if (!data.lname) {
-      return res
-        .status(400)
-        .send({ status: false, msg: "Please Provide Last Name Of Author " });
+    // Validate the first name of author Or Match With Regex Exp.
+    const dv = /[a-zA-Z]/;
+    if (! data.fname.length == 0 || !dv.test(data.fname)) {
+      return res.status(400).send({status: false, msg: "Please Provide Provide First Name Of Author "});
     }
 
-    // validate the email of author is Coming in data or not
-    if (!data.email) {
-      return res
-        .status(400)
-        .send({ status: false, msg: "Please Provide Email Of Author " });
+    // Validate the Last Name of author
+    if (! data.lname|| !dv.test(data.lname)) {
+      return res.status(400).send({ status: false, msg: "Please Provide Last Name Of Author " });
     }
 
-    // // Validate the email correctly
-    //     if (!/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(data.email)) {
-    //   res.status(400).send({
-    //     status: false,
-    //     message: "Email should be a valid email address",
-    //   });
-    // }
+    // Validate the title of author
+    if (!["Mr", "Mrs", "Miss"].includes(data.title)) {
+      return res.status(400).send({status: false,msg: "Title Must be of these values [Mr, Mrs, Miss] "});
+    }
+
+    // Validate the email of author is Coming in data or not
+    if (! data.email.length == 0 ) {
+      return res.status(400).send({ status: false, msg: "Please Provide Email Of Author " });
+    }
+   
+    // Method for Email Validation using Regular Expression
+    const re = /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,20}$/; 
+    if(! re.test(data.email)){ 
+        return res.status(400).send({status: false , msg: "Invalid EmailId Address "})
+    }
 
     // Validate the already existing email
     let alreadyExist = await authorModels.findOne({ email: data.email });
     if (alreadyExist) {
-      res.status(400).send({
-        status: false,
-        message: "Email address is already registered",
-      });
-    }
+      res.status(400).send({ status: false, message: "Email address is already registered"});
+    } 
 
-    // validate the password of author
-    if ((data.password).length < 8 ) {
-      return res
-        .status(400)
-        .send({ status: false, msg: "Please Provide Password Of Author " });
+    // Validate the password of author
+    const passRE = /^(?!\S*\s)(?=\D*\d)(?=.*[!@#$%^&*])(?=[^A-Z]*[A-Z]).{8,15}$/;
+    if ( ! passRE.test(data.password)) {
+      return res.status(400).send({ status: false, msg: "Please Provide Password Of Author " });
     }
-
-    // validate the title of author
-    if (!["Mr", "Mrs", "Miss"].includes(data.title)) {
-      return res.status(400).send({
-        status: false,
-        msg: "Title Must be of these values [Mr, Mrs, Miss] ",
-      });
-    }
-
-    let author = await authorModels.create(data);
-    res.status(200).send({ status: true, msg: "Author Successfully Created", data: author });
+    
+    const author = await authorModels.create(data);
+    return res.status(200).send({ status: true, msg: "Author Successfully Created", data: author });
 
   } catch (err) {
-    res.status(500).send({ status: false, msg: err.message });
+    return res.status(500).send({ status: false, msg: err.message });
   }
 };
 
@@ -85,31 +67,28 @@ const loginAuthor = async function(req,res){
   
   try{
     
-  // first check that body is coming or not
+  // First check that body is coming or not
 
   let data = req.body;
   let authorEmail = req.body.email;
   let authorPassword = req.body.password;
 
-  if(!data){
+  if(! Object.keys(data).length == 0){
     return res.status(404).send({status:false,msg:"Please Enter Author Credentials!!"})
   }
 
-  // validate the email of author is Coming in data or not
-  if (!authorEmail) 
-  {
+  // Validate the email of author is Coming in data or not
+  if (!authorEmail){
     return res.status(400).send({ status: false, msg: "Please Provide Email Of Author " });
   }
 
   // Validate the email correctly
-  if (!/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(authorEmail)) 
-  {
-    res.status(400).send({status: false,message: "Email should be a valid email address"});
+  if (! (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/).test(authorEmail)){
+   return res.status(400).send({status: false,message: "Email should be a valid email address"});
   }
 
-  // validate the password of author
-  if (!authorPassword) 
-  { 
+  // Validate the password of author
+  if (!authorPassword){ 
    return res.status(400).send({ status: false, msg: "Please Provide Password Of Author " });
   }
  
@@ -125,12 +104,10 @@ const loginAuthor = async function(req,res){
   // send response to  user that Author is successfully logged in
   res.status(200).send({status: true, message: "Author login successfully", data: { token }});
 
-  }catch (err) 
-  {
+  }catch (err){
     res.status(500).send({ status: false, msg: err.message });
   }
-
 }
 
-module.exports.createAuthor = createAuthor;
-module.exports.loginAuthor = loginAuthor;
+module.exports = { createAuthor, loginAuthor };
+
