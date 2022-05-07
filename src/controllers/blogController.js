@@ -12,7 +12,7 @@ return x.every(i => typeof(i) === "string")
 }
 
 //------------Creating Blog Model
-const createBlogs = async = (req, res)=> {
+const createBlogs = async  (req, res)=> {
   try {
 
     //Extract Data From Request Body
@@ -43,13 +43,13 @@ const createBlogs = async = (req, res)=> {
 
     // Validate the title in blog
     let dv = /[a-zA-Z]/
-    if (! data.title.length == 0 || ! dv.test(data.tile)){ 
+    if ( data.title.length == 0 || ! dv.test(data.tile)){ 
     return res.status(400).send({status: false,msg: "Please Provide Blog Title"});
     }
 
     // Validate the body in blog
-    if (! data.body.length == 0 || ! dv.test(data.body)){
-    return res.status(400).send({status: false,msg: "Please Provide Blog Body"});
+    if ( data.body.length == 0 || ! dv.test(data.body)){
+    return res.status(400).send({status: false, msg: "Please Provide Blog Body"});
     }
 
     // Validate the category in blog
@@ -67,7 +67,7 @@ const createBlogs = async = (req, res)=> {
     if( data.subcategory != undefined &&  check(data.subcategory)== false){
         return res.status(400).send({ status: false, msg: "Please Provide Valid Subcategory"})
     }
-    data.subcategory = data.subcategory.toLowerCase().trim()  
+    // data.subcategory = data.subcategory.toLowerCase().trim()  
 
     // For Array Data Like Tags and Subcategory
     for (let key in data) {
@@ -103,7 +103,7 @@ const createBlogs = async = (req, res)=> {
 };
 
 //------------Getting Blogs by filter queries
-const getBlogs = async = (req, res)=> {
+const getBlogs = async  (req, res)=> {
   try {
 
     let queryData = req.query;
@@ -176,7 +176,7 @@ const getBlogs = async = (req, res)=> {
 };
 
 //------------Updating blogs By ID by given requirement
-const updateBlogs = async = (req, res) =>{
+const updateBlogs = async  (req, res) =>{
   try {
 
     let blog = req.body;
@@ -237,7 +237,7 @@ const updateBlogs = async = (req, res) =>{
 };
 
 //------------Delete Blogs By ID by given requirement
-const deleteBlog = async = (req, res) =>{
+const deleteBlog = async  (req, res) =>{
   try {
 
     // Extract Blog id From Path params
@@ -261,7 +261,7 @@ const deleteBlog = async = (req, res) =>{
 };
 
 //------------Updating blogs by given requirement i.e Deletion
-const deleteByQuery = async = (req, res) =>{
+const deleteByQuery = async  (req, res) =>{
   try {
     // Extract Data From Query Params
     let queryData = req.query;
@@ -273,7 +273,7 @@ const deleteByQuery = async = (req, res) =>{
 
     // Authorize the author that is requesting to find blogs
     let decodedToken = req.decodedToken
-    if(queryData.authorId && decodedToken.authorId != queryData.authorId ){
+    if( queryData.authorId  && decodedToken.authorId != queryData.authorId ){
      return res.status(403).send({status: false , msg: "Author is not allowed to perform this task"})
     } 
     
@@ -313,8 +313,12 @@ const deleteByQuery = async = (req, res) =>{
   }
 
   // Ensuring that that data is not deleted
-    queryData.isDeleted = false;
-
+    if( queryData.isDeleted == true){
+      console.log(queryData.isDeleted); 
+      return res.status(400).send({status:false,msg:"Blog already deleted"}) 
+     
+    }
+ 
   // Finally Updating Blog Details
   let data1 = await blogModels.updateMany(
       queryData,
@@ -322,7 +326,7 @@ const deleteByQuery = async = (req, res) =>{
       { new: true }
     );
 
-  if(! data1.matchedCount == 0){
+  if( !data1){
   return res.status(404).send({status:false,msg:"No Match has Been Found"})  
   }
   

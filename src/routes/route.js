@@ -13,7 +13,6 @@ router.post("/createAuthor", authorController.createAuthor);
 // Login to Author.
 router.post("/login", authorController.loginAuthor);
 
-
 //--------------------------------------------------------------------------------------------------------------------------------
 // BLOG ROUTES (PROTECTED API'S)
 

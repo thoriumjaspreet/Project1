@@ -16,7 +16,7 @@ const createAuthor = async function (req, res) {
 
     // Validate the first name of author Or Match With Regex Exp.
     const dv = /[a-zA-Z]/;
-    if (! data.fname.length == 0 || !dv.test(data.fname)) {
+    if ( data.fname.length == 0 || !dv.test(data.fname)) {
       return res.status(400).send({status: false, msg: "Please Provide Provide First Name Of Author "});
     }
 
@@ -31,7 +31,7 @@ const createAuthor = async function (req, res) {
     }
 
     // Validate the email of author is Coming in data or not
-    if (! data.email.length == 0 ) {
+    if ( data.email.length == 0 ) {
       return res.status(400).send({ status: false, msg: "Please Provide Email Of Author " });
     }
    
@@ -73,7 +73,7 @@ const loginAuthor = async function(req,res){
   let authorEmail = req.body.email;
   let authorPassword = req.body.password;
 
-  if(! Object.keys(data).length == 0){
+  if( Object.keys(data).length == 0){
     return res.status(404).send({status:false,msg:"Please Enter Author Credentials!!"})
   }
 
