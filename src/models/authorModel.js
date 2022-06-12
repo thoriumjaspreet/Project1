@@ -3,36 +3,35 @@ const mongoose = require("mongoose");
 const newSchema = new mongoose.Schema(
   {
     fname: {
-      type:String,
-      required:"First Name is Required" ,
-      trim:true
+      type: String,
+      required: true,
+      trim: true
     },
 
     lname: {
-      type:String,
-      required:"Last Name is Required",
-      trim:true
+      type: String,
+      required: true,
+      trim: true
     },
 
     title: {
       type: String,
       required: true,
       enum: ["Mr", "Mrs", "Miss"],
-      required:"Title is Required"
     },
 
     email: {
       type: String,
       unique: true,
-      lowercase:true,
-      required: "Email is Required",
-      trim:true,
+      lowercase: true,
+      required: true,
+      trim: true,
     },
 
     password: {
       type: String,
-      required: "Password is Required",
-      trim:true
+      required: true,
+      trim: true
     },
   },
   { timestamps: true }
