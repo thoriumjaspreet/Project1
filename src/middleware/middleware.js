@@ -20,10 +20,11 @@ const login = async function (req, res, next) {
     if (!token) return res.status(401).send({ status: false, msg: "Token must be present" });
 
     //if token is present then decode the token
-    let decodedToken = jwt.verify(token, "Blogging-Site")
+    let decodedToken = jwt.verify(token, "Blogging-Site", function(err,token){if(err) return err
+                                                                             else return token})
 
     // Check Decoded token is here or not
-    if (!decodedToken) return res.status(401).send({ status: false, msg: "Token is Not Present" })
+    // if (!decodedToken) return res.status(401).send({ status: false, msg: "Token is Not Present" })
 
     req.decodedToken = decodedToken
     // if Everything is ok then we head towards Api's
