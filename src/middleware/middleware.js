@@ -22,7 +22,7 @@ const login = async function (req, res, next) {
     // Callback function for decodedtoken 
     let token = function (err, token) {
       if (err) {
-        return err;
+        return res.status(400).send({status:false, msg:"Invalid Token!!!!"});
       }
       else { return token }
     }
