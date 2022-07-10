@@ -10,6 +10,8 @@ const check = (x) => {
     return x.every(i => typeof (i) === "string")
 }
 
+const isValidBody = function (requestBody) {
+    return Object.keys(requestBody).length > 0;
+  }
 
-
-module.exports = { isValidObjectId, check }
+module.exports = { isValidObjectId, check, isValidBody }

@@ -4,7 +4,7 @@ const bodyParser = require("body-parser");
 const route = require("./routes/route");
 
 
-const mongoose= require("mongoose");
+const mongoose = require("mongoose");
 const app = express();
 
 
@@ -19,5 +19,5 @@ app.use("/", route);
 
 const port = process.env.PORT || 3000
 app.listen(process.env.PORT || 3000, function () {
-  console.log(`Express app running on ${port}...`) 
+  console.log(`Express app running on ${port}...`)
 });

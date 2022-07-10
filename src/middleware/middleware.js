@@ -20,7 +20,7 @@ const login = async function (req, res, next) {
     if (!token) return res.status(401).send({ status: false, msg: "Token must be present" });
 
     // Callback function for decodedtoken 
-    let token = function (err, token) {
+    let dtoken = function (err, token) {
       if (err) {
         return res.status(400).send({status:false, msg:"Invalid Token!!!!"});
       }
@@ -28,7 +28,7 @@ const login = async function (req, res, next) {
     }
 
     //if token is present then decode the token
-    let decodedToken = jwt.verify(token, "Blogging-Site",token)
+    let decodedToken = jwt.verify(token, "Blogging-Site",dtoken)
 
     req.decodedToken = decodedToken
     // if Everything is ok then we head towards Api's

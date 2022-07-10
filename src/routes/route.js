@@ -20,7 +20,7 @@ router.post("/login", loginAuthor);
 router.post("/createBlogs", login, createBlogs);
 
 // Get Blogs by Query.
-router.get("/getBlogs", login, getBlogs);
+router.get("/getBlogs", getBlogs);
 
 // Update Blog by BlogId.
 router.put("/UpdateBlogs/:blogId", login, AuthorizationById, updateBlogs);
