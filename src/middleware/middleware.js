@@ -29,7 +29,7 @@ const login = async function (req, res, next) {
 
     //if token is present then decode the token
     let decodedToken = jwt.verify(token, "Blogging-Site",dtoken)
-
+    
     req.decodedToken = decodedToken
     // if Everything is ok then we head towards Api's
     next();
@@ -45,12 +45,13 @@ const AuthorizationById = async function (req, res, next) {
   try {
 
     let BlogId = req.params.blogId
-
+    
     if (!isValidObjectId(BlogId)) {
       return res.status(400).send({ status: false, msg: "Invalid Blog-Id" });
     }
 
     let blogData = await blogModels.findById(BlogId);
+    
     // Extract AuthorId for which the request is made. In this case message to be posted Or Want to update And Delete Something.
     let BlogToBeModified = blogData.authorId;
 
