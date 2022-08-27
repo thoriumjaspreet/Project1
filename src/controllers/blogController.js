@@ -131,7 +131,7 @@ const getBlogs = async (req, res) => {
 //------------Updating blogs By ID by given requirement
 const updateBlogs = async (req, res) => {
 
-  try {
+  // try {
 
     let blog = req.body;
     const { title, body, tags, subcategory, isPublished } = blog
@@ -174,9 +174,9 @@ const updateBlogs = async (req, res) => {
     // sending the data as a response to the user
     res.status(200).send({ status: true, msg: "Blog Updated Successfully", UpdatedData: updatedBlog });
 
-  } catch (err) {
-    return res.status(500).send({ status: false, err: err.message });
-  }
+  // } catch (err) {
+    // return res.status(500).send({ status: false, err: err.message });
+  // }
 };
 
 //------------Delete Blogs By ID by given requirement
