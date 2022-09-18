@@ -182,10 +182,12 @@ const updateBlogs = async (req, res) => {
 //------------Delete Blogs By ID by given requirement
 const deleteBlog = async (req, res) => {
   try {
-
+    
     // Extract Blog id From Path params
     let blogId = req.params.blogId;
-
+    // if (blogId && !(isValidObjectId(blogId))) {
+    //   return res.status(400).send({ status: false, msg: 'blogId is Invalid' })
+    // }
     // find blog data
     let blogData = await blogModels.findById(blogId);
 

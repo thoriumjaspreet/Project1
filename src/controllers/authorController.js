@@ -1,4 +1,4 @@
-const authorModels = require("../models/authorModel.js");
+const authorModel = require("../models/authorModel.js");
 const jwt = require("jsonwebtoken")
 const {
   isValid,
@@ -71,7 +71,7 @@ const createAuthor = async function (req, res) {
     // Validate the password of author
     if (!isValidPassword(password)) {
       return res.status(400).send({ status: false, msg: "Invalid Password !!" });
-    }
+    }  
 
   
 
@@ -112,7 +112,7 @@ const loginAuthor = async function (req, res) {
     }
 
     // Find Author in Author Collection
-    let author = await authorModels.findOne({ email: email, password: password })
+    let author = await authorModel.findOne({ email: email, password: password })
 
     if (!author) {
       return res.status(400).send({ status: false, message: "Invalid Credentials" });

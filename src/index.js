@@ -9,7 +9,13 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true })
+mongoose
+  .connect(
+    "mongodb+srv://Sai0047:rXxgqYKPqwnhcXX7@cluster0.qptsw.mongodb.net/Blogging_Site_Project_1",
+    {
+      useNewUrlParser: true,
+    }
+  )
   .then(() => console.log("MongoDb is Connected"))
   .catch((err) => console.log(err));
 
